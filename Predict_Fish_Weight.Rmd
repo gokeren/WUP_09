@@ -1,6 +1,6 @@
 ---
 title: "Weight of Fish"
-author: "Your Name"
+author: "Keren Gonzalez"
 date: "`r Sys.Date()`"  
 output: 
   html_document:
@@ -23,7 +23,31 @@ require(tidyverse)
 
 ## Perch
 
+```{r}
+perch <- filter(Fish, Species== "Perch")
+perch <- select(perch, -Species)
+```
+
+
 ### Best Models
+
+
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = perch,
+               nbest = 1,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
+
 
 ### Best Two regressor model
 
